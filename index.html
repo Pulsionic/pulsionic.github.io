@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="index, follow" />
+
+<title>Pulsionic — Electric turbojet propulsion</title>
+<meta name="description" content="Pulsionic is developing an electric turbojet engine that replaces fuel combustion with plasma heating of ambient air. No kerosene. No additive. Just air." />
+<meta name="author" content="Pulsionic" />
+<meta name="theme-color" content="#0B0D12" />
+<link rel="canonical" href="https://pulsionic.com/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Pulsionic" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://pulsionic.com/" />
+<meta property="og:title" content="Pulsionic — Electric turbojet propulsion" />
+<meta property="og:description" content="Electric turbojet propulsion. No fuel. Ambient air only." />
+<meta property="og:image" content="https://pulsionic.com/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Pulsionic — Electric turbojet propulsion. No fuel. Ambient air only." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Pulsionic — Electric turbojet propulsion" />
+<meta name="twitter:description" content="Electric turbojet propulsion. No fuel. Ambient air only." />
+<meta name="twitter:image" content="https://pulsionic.com/og.jpg" />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<link rel="preload" href="/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/plex-sans-300.woff2" as="font" type="font/woff2" crossorigin />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Pulsionic",
+  "url": "https://pulsionic.com/",
+  "logo": "https://pulsionic.com/apple-touch-icon.png",
+  "email": "contact@pulsionic.com",
+  "founder": { "@type": "Person", "name": "Thomas Gheffar" }
+}
+</script>
+
+<style>
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-opsz.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-opsz-italic.woff2') format('woff2'); font-weight: 100 900; font-style: italic; font-display: swap; }
+  @font-face { font-family: 'IBM Plex Sans'; src: url('/fonts/plex-sans-300.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'IBM Plex Sans'; src: url('/fonts/plex-sans-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'IBM Plex Sans'; src: url('/fonts/plex-sans-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/plex-mono-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/plex-mono-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+
+  :root {
+    --bg:            #0B0D12;
+    --bg-elev:       #11141B;
+    --border:        #1E2128;
+    --text:          #F2F3F5;
+    --text-muted:    #8A8F99;
+    --text-faint:    #7A7F8B;
+    --accent:        #FF6B47;
+    --accent-soft:   rgba(255, 107, 71, 0.12);
+
+    --font-display:  'Fraunces', ui-serif, Georgia, serif;
+    --font-body:     'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-mono:     'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+
+    --max:           1040px;
+    --pad-x:         clamp(24px, 5vw, 48px);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80vw;
+    height: 80vh;
+    max-width: 900px;
+    max-height: 900px;
+    background: radial-gradient(circle at center,
+      rgba(255, 107, 71, 0.12) 0%,
+      rgba(255, 107, 71, 0.05) 30%,
+      transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+    50%      { opacity: 1;   transform: translateX(-50%) scale(1.05); }
+  }
+
+  .container {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    padding: 32px 0 0;
+    position: relative;
+    z-index: 2;
+  }
+  header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header .brand {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  header .brand span {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+  header nav a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  section {
+    padding: 64px 0;
+    position: relative;
+  }
+  section.hero {
+    padding: 72px 0 64px;
+  }
+  section + section {
+    border-top: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 20px;
+    display: block;
+  }
+  .section-num span.dot {
+    color: var(--accent);
+    margin: 0 10px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--text);
+  }
+  h1 {
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: 1.02;
+    font-variation-settings: "opsz" 144;
+    margin-bottom: 24px;
+  }
+  h1 .line-accent { color: var(--accent); font-style: italic; font-weight: 300; }
+  h2 {
+    font-size: clamp(32px, 4.5vw, 52px);
+    line-height: 1.1;
+    font-variation-settings: "opsz" 96;
+    margin-bottom: 24px;
+    max-width: 780px;
+  }
+  h3 {
+    font-size: 22px;
+    line-height: 1.3;
+    font-family: var(--font-body);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    margin-bottom: 12px;
+  }
+  p {
+    margin: 0 0 20px;
+    color: var(--text);
+    max-width: 680px;
+  }
+  p.lead {
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--text);
+    max-width: 720px;
+  }
+  p.muted {
+    color: var(--text-muted);
+  }
+
+  a {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 180ms ease, color 180ms ease;
+  }
+  a:hover, a:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .hero .meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .hero .meta .tag {
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+  .hero .meta .tag.accent {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .callout {
+    border-left: 2px solid var(--accent);
+    padding: 8px 0 8px 24px;
+    margin: 28px 0 20px;
+  }
+  .callout .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .callout .date {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 48;
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  /* Pillars and two-column blocks */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 32px;
+  }
+  .pillars.two { grid-template-columns: repeat(2, 1fr); }
+  .pillar .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .pillar p {
+    color: var(--text-muted);
+    font-size: 15.5px;
+  }
+  @media (max-width: 720px) {
+    .pillars, .pillars.two { grid-template-columns: 1fr; gap: 36px; }
+  }
+
+  /* Roadmap */
+  .roadmap {
+    margin-top: 32px;
+    display: grid;
+    gap: 0;
+  }
+  .roadmap-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 32px;
+    padding: 22px 0;
+    border-top: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .roadmap-item:last-child { border-bottom: 1px solid var(--border); }
+  .roadmap-item .when {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .roadmap-item .when .status {
+    display: block;
+    font-size: 11px;
+    margin-top: 6px;
+    color: var(--text-faint);
+  }
+  .roadmap-item.done .when { color: var(--text); }
+  .roadmap-item.done .when .status { color: var(--text-muted); }
+  .roadmap-item.next .when,
+  .roadmap-item.next .when .status { color: var(--accent); }
+  .roadmap-item .what h3 {
+    margin-bottom: 6px;
+  }
+  .roadmap-item .what p {
+    color: var(--text-muted);
+    font-size: 15.5px;
+    margin: 0;
+  }
+  .roadmap-note {
+    margin-top: 20px;
+    font-size: 14.5px;
+    color: var(--text-muted);
+  }
+  @media (max-width: 620px) {
+    .roadmap-item { grid-template-columns: 1fr; gap: 12px; }
+  }
+
+  .founder p {
+    font-size: 17px;
+    color: var(--text);
+  }
+  .contact .email {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 72;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    color: var(--text);
+    display: inline-block;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--text-faint);
+    padding-bottom: 6px;
+    transition: color 180ms ease, border-color 180ms ease;
+  }
+  .contact .email:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .contact .inquiry-types {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 24px;
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .contact .inquiry-types a {
+    color: var(--text-muted);
+    border-bottom: 0;
+  }
+  .contact .inquiry-types a::before {
+    content: "→ ";
+    color: var(--accent);
+  }
+  .contact .inquiry-types a:hover,
+  .contact .inquiry-types a:focus-visible {
+    color: var(--accent);
+  }
+
+  footer {
+    padding: 48px 0 40px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  footer .container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer a { color: var(--text-muted); }
+
+  .hero .meta, .hero h1, .hero .lead, .hero .cta-row {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: rise 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .hero .meta { animation-delay: 120ms; }
+  .hero h1   { animation-delay: 280ms; }
+  .hero .lead { animation-delay: 440ms; }
+  .hero .cta-row { animation-delay: 600ms; }
+
+  @keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    .hero-glow { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* Call to action */
+  .cta-row { margin: 32px 0 0; }
+  .cta {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 14px 22px;
+    transition: background 180ms ease, color 180ms ease;
+  }
+  .cta:hover, .cta:focus-visible {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  /* How it works */
+  .flow {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .flow .step { position: relative; }
+  .flow .icon {
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .flow .icon svg {
+    width: 26px;
+    height: 26px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .flow .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 28px;
+    left: 72px;
+    right: -24px;
+    border-top: 1px dashed var(--accent);
+    opacity: 0.5;
+  }
+  .flow .step p {
+    color: var(--text-muted);
+    font-size: 15.5px;
+    margin: 0;
+  }
+
+  @media (max-width: 720px) {
+    .flow { grid-template-columns: 1fr; gap: 28px; }
+    .flow .step { padding-left: 76px; }
+    .flow .icon { position: absolute; left: 0; top: 0; margin: 0; }
+    .flow .step:not(:last-child)::after {
+      top: 64px;
+      bottom: -24px;
+      left: 28px;
+      right: auto;
+      border-top: 0;
+      border-left: 1px dashed var(--accent);
+    }
+  }
+
+  @media (max-width: 620px) {
+    section { padding: 48px 0; }
+    section.hero { padding: 48px 0; }
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+</style>
+<noscript><style>.hero .meta, .hero h1, .hero .lead, .hero .cta-row { opacity: 1 !important; transform: none !important; animation: none !important; }</style></noscript>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="brand"><span>●</span>PULSIONIC</div>
+    <nav aria-label="Main"><a href="#contact">Contact</a></nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="meta">
+        <span class="tag accent">● Status · Bench characterization</span>
+        <span class="tag">Paris · France</span>
+      </div>
+
+      <h1>
+        Electric turbojet propulsion.<br />
+        <span class="line-accent">No fuel. Ambient air only.</span>
+      </h1>
+
+      <p class="lead">
+        Pulsionic is developing a jet engine that replaces fuel combustion with
+        electrically driven plasma heating of ambient air — no kerosene,
+        no additive, no catalyst.
+      </p>
+
+      <p class="cta-row">
+        <a class="cta" href="mailto:contact@pulsionic.com?subject=Pulsionic%20%E2%80%94%20Contact">Get in touch</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="how">
+    <div class="container">
+      <span class="section-num">§ 01 <span class="dot">·</span> How it works</span>
+
+      <h2>Electricity instead of fuel.</h2>
+
+      <ol class="flow">
+        <li class="step">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 15h15a3 3 0 1 1-3 3"/><path d="M3 12h8"/></svg>
+          </div>
+          <h3>Ambient air in</h3>
+          <p>The engine draws in atmospheric air, like any jet engine.</p>
+        </li>
+        <li class="step">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          </div>
+          <h3>Electric plasma heating</h3>
+          <p>Electricity, not fuel, heats the airflow. Plasma heating replaces combustion.</p>
+        </li>
+        <li class="step">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/><path d="M3 7h3"/><path d="M3 17h3"/></svg>
+          </div>
+          <h3>Thrust</h3>
+          <p>The heated air expands and leaves the engine at high speed, producing thrust.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="milestone">
+    <div class="container">
+      <span class="section-num">§ 02 <span class="dot">·</span> First milestone</span>
+
+      <h2>Stable plasma ignition in ambient air, at laboratory scale.</h2>
+
+      <p class="lead muted">
+        On April 17, 2026, Pulsionic sustained a stable plasma discharge inside
+        a laboratory-scale cavity, operating on ambient air alone — without any
+        additive, noble gas, or chemical catalyst.
+      </p>
+
+      <div class="callout">
+        <span class="label">Proof of date · INPI e-Soleau</span>
+        <div class="date">Timestamped deposit — April 17, 2026</div>
+      </div>
+
+      <p class="muted">
+        Technical details are deliberately not published at this stage.
+      </p>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="container">
+      <span class="section-num">§ 03 <span class="dot">·</span> Why it matters</span>
+
+      <h2>A propulsion architecture compatible with post-fossil aviation.</h2>
+
+      <div class="pillars">
+        <div class="pillar">
+          <span class="num">01</span>
+          <h3>Zero fuel.</h3>
+          <p>
+            No kerosene, no hydrogen, no sustainable aviation fuel to source,
+            certify, and transport. The working fluid is the atmosphere itself.
+          </p>
+        </div>
+        <div class="pillar">
+          <span class="num">02</span>
+          <h3>Zero additive.</h3>
+          <p>
+            Pure ambient air — no noble gas feed, no chemical catalyst,
+            no external reactant. No industrial supply chain to build.
+          </p>
+        </div>
+        <div class="pillar">
+          <span class="num">03</span>
+          <h3>Fully electric.</h3>
+          <p>
+            Powered entirely by electricity — from batteries, fuel cells or any
+            future electrical source, in step with the grid's decarbonization.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="applications">
+    <div class="container">
+      <span class="section-num">§ 04 <span class="dot">·</span> Applications</span>
+
+      <h2>Unmanned aircraft first.</h2>
+
+      <div class="pillars two">
+        <div class="pillar">
+          <span class="num">Target markets</span>
+          <p>
+            Small unmanned aircraft first — the shortest path from bench to flight —
+            then larger platforms. Civil and dual-use applications.
+          </p>
+        </div>
+        <div class="pillar">
+          <span class="num">Business model</span>
+          <p>
+            Technology licensing and propulsion module supply to engine and
+            aircraft manufacturers. Pulsionic does not intend to build airframes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="roadmap-section">
+    <div class="container">
+      <span class="section-num">§ 05 <span class="dot">·</span> Roadmap</span>
+
+      <h2>Each step gated by measured results.</h2>
+
+      <div class="roadmap">
+        <div class="roadmap-item done">
+          <div class="when">April 2026<span class="status">✓ Done</span></div>
+          <div class="what">
+            <h3>Stable plasma ignition in ambient air</h3>
+            <p>Laboratory-scale cavity. Ambient air only, no additive.</p>
+          </div>
+        </div>
+        <div class="roadmap-item next">
+          <div class="when">H1 2027<span class="status">● Next</span></div>
+          <div class="what">
+            <h3>Quantified heating efficiency</h3>
+            <p>Energy transferred from the plasma to the airflow, measured on an instrumented bench and reported with its uncertainty.</p>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="when">Then</div>
+          <div class="what">
+            <h3>Static thrust demonstration</h3>
+            <p>Integration into a small turbojet. First thrust measurement under controlled conditions.</p>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="when">Then</div>
+          <div class="what">
+            <h3>Airborne demonstrator</h3>
+            <p>Flight-representative integration, with energy on board.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="roadmap-note">
+        Each step begins once the previous one is measured and documented.
+        Last updated: November 2026.
+      </p>
+    </div>
+  </section>
+
+  <section class="founder">
+    <div class="container">
+      <span class="section-num">§ 06 <span class="dot">·</span> Founder</span>
+
+      <h2>Thomas Gheffar, founder.</h2>
+
+      <p>
+        More than twenty years in information technology, as a program director
+        for cloud, data and AI. Thomas started Pulsionic in 2026 with a hardware-first,
+        empirical approach: build, measure, iterate — and publish only what has
+        been measured.
+      </p>
+
+      <p class="muted">
+        Pulsionic welcomes exchanges with plasma physics and propulsion laboratories.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="container">
+      <span class="section-num">§ 07 <span class="dot">·</span> Contact</span>
+
+      <h2>Get in touch.</h2>
+
+      <a class="email" href="mailto:contact@pulsionic.com">contact@pulsionic.com</a>
+
+      <div class="inquiry-types">
+        <a href="mailto:contact@pulsionic.com?subject=Research%20collaboration%20%E2%80%94%20Pulsionic">Research collaboration</a>
+        <a href="mailto:contact@pulsionic.com?subject=Industrial%20partnership%20%E2%80%94%20Pulsionic">Industrial partnership</a>
+        <a href="mailto:contact@pulsionic.com?subject=Investment%20%E2%80%94%20Pulsionic">Investment</a>
+        <a href="mailto:contact@pulsionic.com?subject=Press%20%E2%80%94%20Pulsionic">Press</a>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <span>© 2026 Pulsionic · Paris · France</span>
+    <span><a href="/legal.html">Legal notice</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
